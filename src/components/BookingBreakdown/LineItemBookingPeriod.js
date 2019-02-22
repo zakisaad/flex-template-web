@@ -40,9 +40,9 @@ const BookingPeriod = props => {
 const LineItemBookingPeriod = props => {
   const { transaction, booking, unitType } = props;
 
-  const { start: startDate, end: endDateRaw } = booking.attributes;
-  const localStartDate = dateFromAPIToLocalNoon(startDate);
-  const localEndDateRaw = dateFromAPIToLocalNoon(endDateRaw);
+  const { start, end, displayStart, displayEnd } = booking.attributes;
+  const localStartDate = dateFromAPIToLocalNoon(displayStart || start);
+  const localEndDateRaw = dateFromAPIToLocalNoon(displayEnd || end);
 
   const isNightly = unitType === LINE_ITEM_NIGHT;
   const isDaily = unitType === LINE_ITEM_DAY;
