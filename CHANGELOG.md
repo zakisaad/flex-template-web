@@ -14,10 +14,64 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2019-XX-XX
 
-- [Fix] Add error handling to `PayoutDetailsForm` and `StripePaymentForm` in case Stripe publishable
+- [add] Use sparse fields on InboxPage query to reduce data load.
+  [#1067](https://github.com/sharetribe/flex-template-web/pull/1067)
+  - NOTE: if you need more fields on `InboxPage`, you need to add those to `loadData` function.
+- [add] Use sparse fields on SearchPage to reduce data load.
+  [#1066](https://github.com/sharetribe/flex-template-web/pull/1066)
+  - NOTE: if you need more fields on `ListingCard` than title, price and geolocation - you need to
+    add those to `loadData` function.
+
+## [v2.14.0] 2019-04-05
+
+- [add] German translations for recent PayoutDetailsForm changes.
+  [#1064](https://github.com/sharetribe/flex-template-web/pull/1064)
+- [add] Added NZD and HKD subunit divisors and refactored currency configuration.
+  [#1063](https://github.com/sharetribe/flex-template-web/pull/1063)
+- [add] Add support for arbitrary line items.
+  [#1062](https://github.com/sharetribe/flex-template-web/pull/1062)
+- [fix] US individual accounts had a non-editable business url in PayoutDetailsForm. It was probably
+  OK, but there wasn't any reason to for it.
+  [#1061](https://github.com/sharetribe/flex-template-web/pull/1061)
+
+  [v2.14.0]: https://github.com/sharetribe/flex-template-web/compare/v2.13.1...v2.14.0
+
+## [v2.13.1] 2019-03-29
+
+- [add] a comment about category and amenities filters. They don't work out-of-the-box, extended
+  data needs a schema before it can work as a search filter.
+  [#1055](https://github.com/sharetribe/flex-template-web/pull/1055)
+- [fix] EditListingWizard: currentUser was null when the EditListingPage got reloaded causing
+  TypeError. [#1056](https://github.com/sharetribe/flex-template-web/pull/1056)
+
+  [v2.13.1]: https://github.com/sharetribe/flex-template-web/compare/v2.13.0...v2.13.1
+
+## [v2.13.0] 2019-03-28
+
+- [add] Add translations for recent Stripe API related changes. (German will be included later.)
+  [#1052](https://github.com/sharetribe/flex-template-web/pull/1052)
+- [fix] JPY currency was configured wrongly: it doesn't use subunits.
+  [#1051](https://github.com/sharetribe/flex-template-web/pull/1051)
+- [add] Complete rewrite to `PayoutDetailsForm` due to breaking changes in Stripe API.
+  [#1049](https://github.com/sharetribe/flex-template-web/pull/1049)
+  - You should track all your customizations to `PayoutDetailsForm` and related changes in
+    `user.duck.js` and elsewhere before merging this upstream-update.
+  - You should update Stripe API to "2019-02-19" or later
+- [add] Booking: use attributes `displayStart` and `displayEnd`, instead of reading booking period
+  directly from `start` and `end` attributes.
+  [#1050](https://github.com/sharetribe/flex-template-web/pull/1050)
+- [fix] A listing title that contained only stripped-off characters caused bugs in slug / pathName
+  generation. [#1048](https://github.com/sharetribe/flex-template-web/pull/1048)
+- [change] Removed Node-engine setup from package.json. Fixed version was causing problems for quite
+  many in their first FTW installation. Note: when troubleshooting your Heroku installation, you
+  might want to reintroduce engine setup.
+  [#1043](https://github.com/sharetribe/flex-template-web/pull/1043)
+- [fix] Add error handling to `PayoutDetailsForm` and `StripePaymentForm` in case Stripe publishable
   key is not configured yet. [#1042](https://github.com/sharetribe/flex-template-web/pull/1042)
 - [fix] FieldBirthdayInput: placeholder text was not selected by default.
   [#1039](https://github.com/sharetribe/flex-template-web/pull/1039)
+
+  [v2.13.0]: https://github.com/sharetribe/flex-template-web/compare/v2.12.1...v2.13.0
 
 ## [v2.12.0] 2019-02-28
 
@@ -39,7 +93,7 @@ way to update this template, but currently, we follow a pattern:
   refactored to work with `rootClassName` prop (PrimaryButton, SecondaryButton and
   InlineTextButton). [#1024](https://github.com/sharetribe/flex-template-web/pull/1024)
 
-  [v2.11.0]: https://github.com/sharetribe/flex-template-web/compare/v2.11.1...v2.12.0
+  [v2.12.0]: https://github.com/sharetribe/flex-template-web/compare/v2.11.1...v2.12.0
 
 ## [v2.11.1] 2019-02-21
 
