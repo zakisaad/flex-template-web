@@ -16,6 +16,7 @@ import {
   isTransactionInitiateListingNotFoundError,
   isTransactionInitiateMissingStripeAccountError,
   isTransactionInitiateBookingTimeNotAvailableError,
+  isTransactionChargeDisabledError,
   isTransactionZeroPaymentError,
   transactionInitiateOrderStripeErrors,
 } from '../../util/errors';
@@ -37,6 +38,7 @@ import {
   setInitialValues,
   speculateTransaction,
 } from './CheckoutPage.duck';
+import { createStripePaymentToken, clearStripePaymentToken } from '../../ducks/stripe.duck.js';
 import config from '../../config';
 
 import { storeData, storedData, clearData } from './CheckoutPageSessionHelpers';
@@ -150,6 +152,7 @@ export class CheckoutPageComponent extends Component {
       sendOrderRequest,
       sendOrderRequestAfterEnquiry,
       speculatedTransaction,
+      onClearStripePaymentToken,
       dispatch,
     } = this.props;
 
@@ -188,6 +191,7 @@ export class CheckoutPageComponent extends Component {
         const orderDetailsPath = pathByRouteName('OrderDetailsPage', routes, {
           id: orderId.uuid,
         });
+        onClearStripePaymentToken();
         clearData(STORAGE_KEY);
         history.push(orderDetailsPath);
       })
@@ -206,6 +210,10 @@ export class CheckoutPageComponent extends Component {
       intl,
       params,
       currentUser,
+      onCreateStripePaymentToken,
+      stripePaymentTokenInProgress,
+      stripePaymentTokenError,
+      stripePaymentToken,
     } = this.props;
 
     // Since the listing data is already given from the ListingPage
@@ -299,6 +307,7 @@ export class CheckoutPageComponent extends Component {
     );
 
     const isAmountTooLowError = isTransactionInitiateAmountTooLowError(initiateOrderError);
+    const isChargeDisabledError = isTransactionChargeDisabledError(initiateOrderError);
     const isBookingTimeNotAvailableError = isTransactionInitiateBookingTimeNotAvailableError(
       initiateOrderError
     );
@@ -316,6 +325,12 @@ export class CheckoutPageComponent extends Component {
       initiateOrderErrorMessage = (
         <p className={css.orderError}>
           <FormattedMessage id="CheckoutPage.bookingTimeNotAvailableMessage" />
+        </p>
+      );
+    } else if (!listingNotFound && isChargeDisabledError) {
+      initiateOrderErrorMessage = (
+        <p className={css.orderError}>
+          <FormattedMessage id="CheckoutPage.chargeDisabledMessage" />
         </p>
       );
     } else if (!listingNotFound && stripeErrors && stripeErrors.length > 0) {
@@ -464,6 +479,10 @@ export class CheckoutPageComponent extends Component {
                   paymentInfo={intl.formatMessage({ id: 'CheckoutPage.paymentInfo' })}
                   authorDisplayName={currentAuthor.attributes.profile.displayName}
                   showInitialMessageInput={showInitialMessageInput}
+                  onCreateStripePaymentToken={onCreateStripePaymentToken}
+                  stripePaymentTokenInProgress={stripePaymentTokenInProgress}
+                  stripePaymentTokenError={stripePaymentTokenError}
+                  stripePaymentToken={stripePaymentToken}
                 />
               ) : null}
             </section>
@@ -506,6 +525,9 @@ CheckoutPageComponent.defaultProps = {
   speculatedTransaction: null,
   enquiredTransaction: null,
   currentUser: null,
+  stripePaymentToken: null,
+  stripePaymentTokenInProgress: false,
+  stripePaymentTokenError: null,
 };
 
 CheckoutPageComponent.propTypes = {
@@ -528,6 +550,10 @@ CheckoutPageComponent.propTypes = {
     slug: string,
   }).isRequired,
   sendOrderRequest: func.isRequired,
+  onCreateStripePaymentToken: func.isRequired,
+  stripePaymentTokenInProgress: bool,
+  stripePaymentTokenError: propTypes.error,
+  stripePaymentToken: object,
 
   // from connect
   dispatch: func.isRequired,
@@ -553,6 +579,11 @@ const mapStateToProps = state => {
     initiateOrderError,
   } = state.CheckoutPage;
   const { currentUser } = state.user;
+  const {
+    stripePaymentTokenInProgress,
+    stripePaymentTokenError,
+    stripePaymentToken,
+  } = state.stripe;
   return {
     scrollingDisabled: isScrollingDisabled(state),
     currentUser,
@@ -564,6 +595,9 @@ const mapStateToProps = state => {
     enquiredTransaction,
     listing,
     initiateOrderError,
+    stripePaymentTokenInProgress,
+    stripePaymentTokenError,
+    stripePaymentToken,
   };
 };
 
@@ -573,6 +607,8 @@ const mapDispatchToProps = dispatch => ({
   sendOrderRequestAfterEnquiry: (transactionId, params) =>
     dispatch(initiateOrderAfterEnquiry(transactionId, params)),
   fetchSpeculatedTransaction: params => dispatch(speculateTransaction(params)),
+  onCreateStripePaymentToken: params => dispatch(createStripePaymentToken(params)),
+  onClearStripePaymentToken: () => dispatch(clearStripePaymentToken()),
 });
 
 const CheckoutPage = compose(

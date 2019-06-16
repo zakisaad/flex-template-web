@@ -14,13 +14,116 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2019-XX-XX
 
+## [v2.17.1] 2019-06-11
+
+- [fix] `stripeCardToken` didn't update when the user tried to book the same listing for a second
+  time. This update will clear the old cardtoken from Redux store when redirecting to
+  `TransactionPage`. [#1114](https://github.com/sharetribe/flex-template-web/pull/1114)
+- [fix] In `LineItemProviderCommissionMaybe.js` file check that `providerCommissionLineItem` exists.
+  In default transaction process the `providerCommissionLineItem` can be expected to be there but if
+  the process is using only customer commission there will be error.
+  [#1112](https://github.com/sharetribe/flex-template-web/pull/1112)
+- [security] Update Flex SDK version to v1.4.1. The new version updates depencencies with security
+  issues [#1111](https://github.com/sharetribe/flex-template-web/pull/1111)
+- [fix] Fix a bug in showing review links. Because of the bug the second review link was not visible
+  in `ActivityFeed`. [#1106](https://github.com/sharetribe/flex-template-web/pull/1106)
+- [fix] Emptying the priceFilter component in the searchPage caused a page breaking error.
+  [#1101](https://github.com/sharetribe/flex-template-web/pull/1101)
+
+  [v2.17.1]: https://github.com/sharetribe/flex-template-web/compare/v2.17.0...v2.17.1
+
+## [v2.17.0] 2019-05-23
+
+- [change] Mapbox library dependencies updated to v1.0.0.
+  [#1099](https://github.com/sharetribe/flex-template-web/pull/1099)
+  - Note: Mapbox changed their pricing scheme!
+- [fix] missing provider information (like SSN in US), might cause payment to fail on
+  `CheckoutPage`. This improves related error message.
+  [#1098](https://github.com/sharetribe/flex-template-web/pull/1098)
+- [fix] Menu needs to wait for mounting to calculate dimensions properly.
+  [#1096](https://github.com/sharetribe/flex-template-web/pull/1096)
+- [fix] Renamed Component.example.css files to ComponentExample.css to fix bug introduced in one of
+  the library updates. [#1095](https://github.com/sharetribe/flex-template-web/pull/1095)
+- [add] `rawOnly` flag for Styleguide examples using fixed positioning or full-page dimensions.
+  [#1094](https://github.com/sharetribe/flex-template-web/pull/1094)
+- [fix] Show error when typing credit card number if e.g. the number is invalid. Fixes bug that was
+  introduced in PR #1088. [#1092](https://github.com/sharetribe/flex-template-web/pull/1092)
+- [change] Use Final Form on `StripePaymentForm` for consistency. Note that card form Stripe
+  Elements in `StripePaymentForm` is not a Final Form field so it's not available trough Final Form
+  but handled separately. [#1088](https://github.com/sharetribe/flex-template-web/pull/1088)
+- [change] Move Stripe SDK call from `StripePaymentForm` to `stripe.duck.js` for consistency.
+  [#1086](https://github.com/sharetribe/flex-template-web/pull/1086)
+
+  [v2.17.0]: https://github.com/sharetribe/flex-template-web/compare/v2.16.0...v2.17.0
+
+## [v2.16.0] 2019-05-08
+
+This release makes 2 big updates to `sharetribe-scripts` package (which is our fork from Create
+React App). It is updated from v1.1.5 ->
+[2.1.8](https://github.com/sharetribe/create-react-app/blob/master/CHANGELOG-2.x.md#migrating-from-1x-to-203)
+-> [3.0.0](https://github.com/sharetribe/create-react-app/blob/master/CHANGELOG.md). This brought up
+a couple of changes:
+
+- package.json has now a **"browserlist"** configuration key. This gives you an option to affect
+  browser support (it affects CSS Autoprefixer and JS build output).
+  [You might want to update it.](https://github.com/sharetribe/flex-template-web/pull/1073)
+- IE support is removed from Create React App, but you can add polyfills yourself if needed.
+- React was updated to a version that supports _Hooks_ and _Rules of React_ eslint plugin is
+  included.
+- All the npm vulnerability report exceptions were removed from `.auditrc`
+
+There was also a couple of bug fixes you should check carefully:
+[#1082](https://github.com/sharetribe/flex-template-web/pull/1082),
+[#1084](https://github.com/sharetribe/flex-template-web/pull/1084).
+
+**Changes:**
+
+- [fix] Previous change from `currentUser.attributes.stripeConnected` to separately included
+  `stripeAccount` caused errors since updates to currentUser entity didn't include `stripeAccount`.
+  Including it every time sounds quite error-prone, so we reversed that change.
+  [#1084](https://github.com/sharetribe/flex-template-web/pull/1084)
+- [fix] Edit `updatedEntities` function in `util/data.js` so that it doesn't mutate the
+  `oldEntities` argument. [#1079](https://github.com/sharetribe/flex-template-web/pull/1079)
+- [change] Update sharetribe-scripts (CRA fork) to v3.0.0. There are a couple of changes that you
+  should check from [#1081](https://github.com/sharetribe/flex-template-web/pull/1081)
+  - Reserve use\* function naming pattern for React Hooks.
+  - Recent SDK update changed the proptypes for snapshots.
+  - Updated scripts/config.js after Prettier version bump
+  - Removed unnecessary audit exceptions
+- [fix] Ensure on `TransactionPage` that all the required data is loaded before showing the page.
+  [#1082](https://github.com/sharetribe/flex-template-web/pull/1082)
+- [fix] Use proper method for Sentry on logout to avoid error message.
+  [#1080](https://github.com/sharetribe/flex-template-web/pull/1080),
+- [change] Update sharetribe-scripts (CRA fork) to v2.1.8. There are a couple of changes that you
+  should check from [#1073](https://github.com/sharetribe/flex-template-web/pull/1073)
+  - package.json has now a "browserlist" configuration key. This gives you an option to affect
+    Autoprefixer configs (aka CSS vendor prefixes / browser support). You might want to update it.
+  - IE support is removed from Create React App, but you can add polyfills yourself if needed.
+  - Test snapshots were also changed a bit. (Update your own custom tests if needed.)
+  - Some CSS and React rules were more strict, you might need to make changes to your custom code.
+- [fix] New npm vulnerability alerts checked and added to exception list.
+  [#1075](https://github.com/sharetribe/flex-template-web/pull/1075)
+- [fix] ListingPage.duck: fix minor bug on dispatching the fetchReviewsRequest action
+  [#1074](https://github.com/sharetribe/flex-template-web/pull/1074)
+
+  [v2.16.0]: https://github.com/sharetribe/flex-template-web/compare/v2.15.0...v2.16.0
+
+## [v2.15.0] 2019-04-24
+
+- [add] Improve printing API errors on web inspector (console.table)
+  [#1071](https://github.com/sharetribe/flex-template-web/pull/1071)
+- [fix] ManageAvailabilityCalendar.js didn't use UTC time when fetching data for calendar months.
+  [#1069](https://github.com/sharetribe/flex-template-web/pull/1069)
 - [add] Use sparse fields on InboxPage query to reduce data load.
   [#1067](https://github.com/sharetribe/flex-template-web/pull/1067)
   - NOTE: if you need more fields on `InboxPage`, you need to add those to `loadData` function.
 - [add] Use sparse fields on SearchPage to reduce data load.
   [#1066](https://github.com/sharetribe/flex-template-web/pull/1066)
+
   - NOTE: if you need more fields on `ListingCard` than title, price and geolocation - you need to
     add those to `loadData` function.
+
+  [v2.15.0]: https://github.com/sharetribe/flex-template-web/compare/v2.14.0...v2.15.0
 
 ## [v2.14.0] 2019-04-05
 
