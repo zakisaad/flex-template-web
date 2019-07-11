@@ -14,6 +14,41 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2019-XX-XX
 
+## [v3.1.1] 2019-07-08
+
+- [fix] Ensure on `TransactionPanel` that enquiry has a correct transition when a customer tries to
+  book the listing. This might happen with transaction process changes (e.g. when changing from
+  previous default to SCA process).
+  [#1131](https://github.com/sharetribe/flex-template-web/pull/1131)
+
+## [v3.1.0] 2019-07-05
+
+- [fix] SectionHero: fix type in search params. There was an extra "/s?".
+  [#1124](https://github.com/sharetribe/flex-template-web/pull/1124)
+- [add] Add support for Singapore as the payout country of a provider. Also fix a bug in passing the
+  personal ID number to Stripe. [#1122](https://github.com/sharetribe/flex-template-web/pull/1122)
+- [add] Add events.mapbox.com to `connect-src` in `csp.js` file.
+  [#1123](https://github.com/sharetribe/flex-template-web/pull/1123)
+- [change] Verify email automatically once the verification link is clicked. Redirect the user to
+  the landing page after verification.
+  [#1121](https://github.com/sharetribe/flex-template-web/pull/1121)
+
+  [v3.0.0]: https://github.com/sharetribe/flex-template-web/compare/v3.0.0...v3.1.0
+
+## [v3.0.0] 2019-07-02
+
+- [add] Strong Customer Authentication (SCA) with Stripe's new PaymentIntents flow. This is a big
+  change for checkout flow and includes a madatory transaction process change.
+  [#1089](https://github.com/sharetribe/flex-template-web/pull/1089)
+
+  - You should check [the pull request](https://github.com/sharetribe/flex-template-web/pull/1089)
+  - and read 3 Flex Docs articles:
+    [SCA](https://www.sharetribe.com/docs/background/strong-customer-authentication/),
+    [PaymentIntents](https://www.sharetribe.com/docs/background/payment-intents/), and
+    [How to take PaymentIntents into use](https://www.sharetribe.com/docs/guide/how-to-take-payment-intents-into-use/)
+
+  [v3.0.0]: https://github.com/sharetribe/flex-template-web/compare/v2.17.1...v3.0.0
+
 ## [v2.17.1] 2019-06-11
 
 - [fix] `stripeCardToken` didn't update when the user tried to book the same listing for a second

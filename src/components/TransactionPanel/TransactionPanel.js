@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { array, arrayOf, bool, func, number, string } from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames';
 import {
+  TRANSITION_REQUEST_PAYMENT_AFTER_ENQUIRY,
   txIsAccepted,
   txIsCanceled,
   txIsDeclined,
   txIsEnquired,
+  txIsPaymentExpired,
+  txIsPaymentPending,
   txIsRequested,
   txHasBeenDelivered,
 } from '../../util/transaction';
@@ -32,6 +35,8 @@ import FeedSection from './FeedSection';
 import SaleActionButtonsMaybe from './SaleActionButtonsMaybe';
 import PanelHeading, {
   HEADING_ENQUIRED,
+  HEADING_PAYMENT_PENDING,
+  HEADING_PAYMENT_EXPIRED,
   HEADING_REQUESTED,
   HEADING_ACCEPTED,
   HEADING_DECLINED,
@@ -178,6 +183,7 @@ export class TransactionPanelComponent extends Component {
       onSubmitBookingRequest,
       timeSlots,
       fetchTimeSlotsError,
+      nextTransitions,
     } = this.props;
 
     const currentTransaction = ensureTransaction(transaction);
@@ -198,9 +204,26 @@ export class TransactionPanelComponent extends Component {
 
     const stateDataFn = tx => {
       if (txIsEnquired(tx)) {
+        const transitions = Array.isArray(nextTransitions)
+          ? nextTransitions.map(transition => {
+              return transition.attributes.name;
+            })
+          : [];
+        const hasCorrectNextTransition =
+          transitions.length > 0 && transitions.includes(TRANSITION_REQUEST_PAYMENT_AFTER_ENQUIRY);
         return {
           headingState: HEADING_ENQUIRED,
-          showBookingPanel: isCustomer && !isProviderBanned,
+          showBookingPanel: isCustomer && !isProviderBanned && hasCorrectNextTransition,
+        };
+      } else if (txIsPaymentPending(tx)) {
+        return {
+          headingState: HEADING_PAYMENT_PENDING,
+          showDetailCardHeadings: isCustomer,
+        };
+      } else if (txIsPaymentExpired(tx)) {
+        return {
+          headingState: HEADING_PAYMENT_EXPIRED,
+          showDetailCardHeadings: isCustomer,
         };
       } else if (txIsRequested(tx)) {
         return {
@@ -442,9 +465,8 @@ TransactionPanelComponent.defaultProps = {
   sendReviewError: null,
   timeSlots: null,
   fetchTimeSlotsError: null,
+  nextTransitions: null,
 };
-
-const { arrayOf, bool, func, number, string } = PropTypes;
 
 TransactionPanelComponent.propTypes = {
   rootClassName: string,
@@ -469,6 +491,7 @@ TransactionPanelComponent.propTypes = {
   onSubmitBookingRequest: func.isRequired,
   timeSlots: arrayOf(propTypes.timeSlot),
   fetchTimeSlotsError: propTypes.error,
+  nextTransitions: array,
 
   // Sale related props
   onAcceptSale: func.isRequired,
