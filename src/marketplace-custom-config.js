@@ -4,44 +4,28 @@
 
 export const amenities = [
   {
-    key: 'towels',
-    label: 'Towels',
+    key: 'coal',
+    label: 'Coal',
   },
   {
-    key: 'bathroom',
-    label: 'Bathroom',
+    key: 'flavour',
+    label: 'Flavour',
   },
   {
-    key: 'swimming_pool',
-    label: 'Swimming pool',
+    key: 'gas_stove',
+    label: 'Gas stove',
   },
   {
-    key: 'own_drinks',
-    label: 'Own drinks allowed',
-  },
-  {
-    key: 'jacuzzi',
-    label: 'Jacuzzi',
-  },
-  {
-    key: 'audiovisual_entertainment',
-    label: 'Audiovisual entertainment',
-  },
-  {
-    key: 'barbeque',
-    label: 'Barbeque',
-  },
-  {
-    key: 'own_food_allowed',
-    label: 'Own food allowed',
+    key: 'tongs',
+    label: 'Tongs',
   },
 ];
 
 export const categories = [
-  { key: 'smoke', label: 'Smoke' },
-  { key: 'electric', label: 'Electric' },
-  { key: 'wood', label: 'Wood' },
-  { key: 'other', label: 'Other' },
+  { key: 'set_one', label: 'One Shisha' },
+  { key: 'set_two', label: 'Two Shishas' },
+  { key: 'set_three', label: 'Three Shishas' },
+  { key: 'set_n', label: 'Four+ Shishas' },
 ];
 
 // Price filter configuration
