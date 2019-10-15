@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import config from '../../config';
-import IconLogo from './IconLogo';
-import LogoImage from './saunatime-logo.png';
+// import IconLogo from './IconLogo';
+import LogoImage from './puff-logo.png';
+import LogoImageIcon from './puff-logo-small.png';
 import css from './Logo.css';
 
 const Logo = props => {
@@ -15,7 +16,8 @@ const Logo = props => {
     return <img className={className} src={LogoImage} alt={config.siteTitle} {...rest} />;
   }
 
-  return <IconLogo className={mobileClasses} {...rest} />;
+  return <img className={mobileClasses} style={{ height: '30px' }} src={LogoImageIcon} alt={config.siteTitle}  {...rest} />;
+  // return <IconLogo className={mobileClasses} {...rest} />;
 };
 
 const { oneOf, string } = PropTypes;
